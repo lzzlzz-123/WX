@@ -59,3 +59,11 @@ curl -I http://your-domain/api/health
 ```
 
 浏览器刷新 `/orders`、`/products` 等前端路由时应仍返回管理端页面，而 `/api/*` 请求应转发到 Spring Boot 后端。
+
+## 微信支付回调
+
+支付结果通知 `POST /api/pay/wechat/notify`、退款结果通知 `POST /api/pay/wechat/refund-notify` 已由配置中的 `/api/pay/` 独立 location 代理（更短超时）。注意：
+
+- 微信商户平台配置的回调地址必须是**公网可访问的 HTTPS 地址**（如 `https://api.example.com/api/pay/wechat/notify`），并与后端 `WECHAT_PAY_NOTIFY_URL` 环境变量保持一致；
+- 这两个路径不需要登录态，安全性由微信支付 V3 回调验签保证，不要在 Nginx 上加 IP 白名单（微信回调 IP 不固定）；
+- 本地联调可用内网穿透（如 cpolar、natapp）把 `/api/pay/` 暴露到公网临时域名。

@@ -31,16 +31,19 @@ public class ProductService {
     private final ProductTierPriceMapper tierPriceMapper;
     private final StockLogMapper stockLogMapper;
     private final SettingService settingService;
+    private final AdminAuditService auditService;
     private final RedisCacheService cacheService;
     private final ObjectMapper objectMapper;
 
     public ProductService(ProductMapper productMapper, ProductTierPriceMapper tierPriceMapper,
                           StockLogMapper stockLogMapper, SettingService settingService,
+                          AdminAuditService auditService,
                           RedisCacheService cacheService, ObjectMapper objectMapper) {
         this.productMapper = productMapper;
         this.tierPriceMapper = tierPriceMapper;
         this.stockLogMapper = stockLogMapper;
         this.settingService = settingService;
+        this.auditService = auditService;
         this.cacheService = cacheService;
         this.objectMapper = objectMapper;
     }
@@ -172,6 +175,8 @@ public class ProductService {
         logEntry.setReason(reason);
         logEntry.setOperatorAdminId(operatorAdminId);
         stockLogMapper.insert(logEntry);
+        auditService.record(operatorAdminId, null, "STOCK_ADJUST",
+                product.getSku(), "调整 " + delta + "，调整后库存 " + product.getStock() + "，原因：" + reason);
         invalidate(id);
         return logEntry;
     }

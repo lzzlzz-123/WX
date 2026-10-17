@@ -229,6 +229,20 @@ CREATE TABLE IF NOT EXISTS stock_log (
   INDEX idx_stock_log_product (product_id)
 ) ENGINE=InnoDB;
 
+-- 管理员操作审计日志
+CREATE TABLE IF NOT EXISTS admin_operation_log (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  admin_id BIGINT,
+  admin_username VARCHAR(60),
+  action VARCHAR(40) NOT NULL COMMENT 'LOGIN/LOGIN_FAILED/ACCOUNT_*/ORDER_*/STOCK_ADJUST/INVOICE_*',
+  target VARCHAR(120),
+  detail VARCHAR(500),
+  ip VARCHAR(60),
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  INDEX idx_audit_action (action),
+  INDEX idx_audit_admin (admin_id)
+) ENGINE=InnoDB;
+
 -- 订单开票申请
 CREATE TABLE IF NOT EXISTS invoice_request (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,

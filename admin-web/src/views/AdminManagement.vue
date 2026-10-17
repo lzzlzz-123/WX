@@ -9,8 +9,25 @@ const loading = ref(false)
 const createVisible = ref(false)
 const createForm = ref({ username: '', password: '', realName: '', roleCode: 'OPERATOR' })
 const saving = ref(false)
+const auditLogs = ref([])
+const auditTotal = ref(0)
+const auditPage = ref(1)
+const auditLoading = ref(false)
 
 const roleMap = { SUPER_ADMIN: '超级管理员', OPERATOR: '运营', FINANCE: '财务' }
+
+async function loadAuditLogs() {
+  auditLoading.value = true
+  try {
+    const response = await adminApi.auditLogs({ page: auditPage.value, size: 20 })
+    auditLogs.value = response.data.records
+    auditTotal.value = response.data.total
+  } catch (error) {
+    ElMessage.error(error.message)
+  } finally {
+    auditLoading.value = false
+  }
+}
 
 async function load() {
   loading.value = true
@@ -82,7 +99,7 @@ async function resetPassword(row) {
   }
 }
 
-onMounted(load)
+onMounted(() => { load(); loadAuditLogs() })
 </script>
 
 <template>
@@ -126,5 +143,18 @@ onMounted(load)
         <el-button type="primary" :loading="saving" @click="submitCreate">创建</el-button>
       </template>
     </el-dialog>
+  </section>
+
+  <section class="module-panel" style="margin-top:18px">
+    <div class="module-toolbar"><div class="module-search"><strong>操作审计日志</strong></div><el-button :icon="Refresh" @click="loadAuditLogs">刷新</el-button></div>
+    <el-table v-loading="auditLoading" :data="auditLogs" stripe>
+      <el-table-column prop="createdAt" label="时间" width="160"><template #default="{ row }">{{ (row.createdAt || '').replace('T', ' ').slice(0, 19) }}</template></el-table-column>
+      <el-table-column label="操作人" width="140"><template #default="{ row }">{{ row.adminUsername || `管理员#${row.adminId ?? '-'}` }}</template></el-table-column>
+      <el-table-column prop="action" label="操作类型" width="170"><template #default="{ row }"><el-tag effect="plain">{{ row.action }}</el-tag></template></el-table-column>
+      <el-table-column prop="target" label="对象" width="180" show-overflow-tooltip />
+      <el-table-column prop="detail" label="详情" min-width="220" show-overflow-tooltip><template #default="{ row }">{{ row.detail || '-' }}</template></el-table-column>
+      <el-table-column prop="ip" label="IP" width="130"><template #default="{ row }">{{ row.ip || '-' }}</template></el-table-column>
+    </el-table>
+    <div class="module-pagination"><span>共 {{ auditTotal }} 条</span><el-pagination v-model:current-page="auditPage" :total="auditTotal" :page-size="20" layout="prev, pager, next" @current-change="loadAuditLogs" /></div>
   </section>
 </template>

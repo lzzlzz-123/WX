@@ -32,10 +32,16 @@ class AdminAuthControllerTest {
     @Mock
     private JwtTokenService jwtTokenService;
 
+    @Mock
+    private com.buildmart.service.RedisCacheService cacheService;
+
+    @Mock
+    private com.buildmart.service.AdminAuditService auditService;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(new AdminAuthController(adminMapper, passwordEncoder, jwtTokenService))
+        mockMvc = MockMvcBuilders.standaloneSetup(new AdminAuthController(adminMapper, passwordEncoder, jwtTokenService, cacheService, auditService))
                 .setControllerAdvice(new ApiExceptionHandler())
                 .build();
     }

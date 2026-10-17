@@ -28,12 +28,14 @@ public class AdminAccountService {
     private final SysAdminMapper adminMapper;
     private final SysRolePermissionMapper permissionMapper;
     private final PasswordEncoder passwordEncoder;
+    private final AdminAuditService auditService;
 
     public AdminAccountService(SysAdminMapper adminMapper, SysRolePermissionMapper permissionMapper,
-                               PasswordEncoder passwordEncoder) {
+                               PasswordEncoder passwordEncoder, AdminAuditService auditService) {
         this.adminMapper = adminMapper;
         this.permissionMapper = permissionMapper;
         this.passwordEncoder = passwordEncoder;
+        this.auditService = auditService;
     }
 
     public List<SysAdmin> list() {
@@ -57,6 +59,7 @@ public class AdminAccountService {
         admin.setRoleCode(normalizeRole(roleCode));
         admin.setStatus(1);
         adminMapper.insert(admin);
+        auditService.record(AuthContext.requireAdminId(), null, "ACCOUNT_CREATE", username, "创建管理员，角色 " + admin.getRoleCode());
         admin.setPasswordHash(null);
         return admin;
     }
@@ -89,6 +92,8 @@ public class AdminAccountService {
         }
         admin.setStatus(status == null ? 1 : status);
         adminMapper.updateById(admin);
+        auditService.record(AuthContext.requireAdminId(), null, "ACCOUNT_STATUS", admin.getUsername(),
+                "状态变更为 " + admin.getStatus());
     }
 
     @Transactional
@@ -98,6 +103,7 @@ public class AdminAccountService {
         SysAdmin admin = requireAdmin(id);
         admin.setPasswordHash(passwordEncoder.encode(newPassword));
         adminMapper.updateById(admin);
+        auditService.record(AuthContext.requireAdminId(), null, "ACCOUNT_RESET_PASSWORD", admin.getUsername(), "重置密码");
     }
 
     /** 角色 -> 权限码列表。 */

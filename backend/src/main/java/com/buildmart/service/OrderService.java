@@ -21,15 +21,17 @@ public class OrderService {
     private final WxPayService wxPayService;
     private final SysUserMapper userMapper;
     private final WxSubscribeMessageService subscribeMessageService;
+    private final AdminAuditService auditService;
 
     public OrderService(PurchaseOrderMapper orderMapper, OrderShipmentMapper shipmentMapper,
                         WxPayService wxPayService, SysUserMapper userMapper,
-                        WxSubscribeMessageService subscribeMessageService) {
+                        WxSubscribeMessageService subscribeMessageService, AdminAuditService auditService) {
         this.orderMapper = orderMapper;
         this.shipmentMapper = shipmentMapper;
         this.wxPayService = wxPayService;
         this.userMapper = userMapper;
         this.subscribeMessageService = subscribeMessageService;
+        this.auditService = auditService;
     }
 
     public PageResult<PurchaseOrder> page(long page, long size, String status) {
@@ -65,6 +67,8 @@ public class OrderService {
         shipment.setPickupCode(selfPickup ? nextPickupCode() : null);
         shipment.setRemark(remark);
         shipmentMapper.insert(shipment);
+        auditService.record(com.buildmart.common.AuthContext.getAdminId(), null, "ORDER_SHIP", order.getOrderNo(),
+                selfPickup ? "自提发货，核销码已生成" : logisticsCompany + " " + trackingNo);
         // 发货订阅消息（模板未配置或推送失败均不影响发货主流程）
         try {
             com.buildmart.entity.SysUser user = userMapper.selectById(order.getUserId());
@@ -91,6 +95,8 @@ public class OrderService {
             throw new IllegalArgumentException("退款金额不能超过实付金额");
         }
         wxPayService.refund(order, refundAmount, reason);
+        auditService.record(com.buildmart.common.AuthContext.getAdminId(), null, "ORDER_REFUND",
+                order.getOrderNo(), "退款 ¥" + refundAmount + "，原因：" + reason);
     }
 
     private String nextPickupCode() {

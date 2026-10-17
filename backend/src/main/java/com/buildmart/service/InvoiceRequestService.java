@@ -22,12 +22,14 @@ public class InvoiceRequestService {
     private final InvoiceRequestMapper requestMapper;
     private final InvoiceTitleMapper titleMapper;
     private final PurchaseOrderMapper orderMapper;
+    private final AdminAuditService auditService;
 
     public InvoiceRequestService(InvoiceRequestMapper requestMapper, InvoiceTitleMapper titleMapper,
-                                 PurchaseOrderMapper orderMapper) {
+                                 PurchaseOrderMapper orderMapper, AdminAuditService auditService) {
         this.requestMapper = requestMapper;
         this.titleMapper = titleMapper;
         this.orderMapper = orderMapper;
+        this.auditService = auditService;
     }
 
     /** 小程序端发起开票申请。仅已支付订单可申请，每单限一次。 */
@@ -85,6 +87,7 @@ public class InvoiceRequestService {
         if (requestMapper.updateStatus(id, "ISSUED", null) != 1) {
             throw new IllegalStateException("申请不存在或已处理");
         }
+        auditService.record(com.buildmart.common.AuthContext.getAdminId(), null, "INVOICE_ISSUE", String.valueOf(id), null);
     }
 
     /** 管理端驳回申请。 */
@@ -93,5 +96,6 @@ public class InvoiceRequestService {
         if (requestMapper.updateStatus(id, "REJECTED", reason) != 1) {
             throw new IllegalStateException("申请不存在或已处理");
         }
+        auditService.record(com.buildmart.common.AuthContext.getAdminId(), null, "INVOICE_REJECT", String.valueOf(id), reason);
     }
 }

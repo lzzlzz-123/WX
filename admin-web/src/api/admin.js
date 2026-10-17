@@ -37,6 +37,7 @@ export const adminApi = {
   updateAccount: (id, payload) => http.put(`/admin/accounts/${id}`, payload),
   changeAccountStatus: (id, value) => http.patch(`/admin/accounts/${id}/status`, null, { params: { value } }),
   resetAccountPassword: (id, payload) => http.post(`/admin/accounts/${id}/reset-password`, payload),
+  auditLogs: params => http.get('/admin/audit-logs', { params }),
   // 系统设置
   settings: () => http.get('/admin/settings'),
   saveSettings: payload => http.put('/admin/settings', payload)
