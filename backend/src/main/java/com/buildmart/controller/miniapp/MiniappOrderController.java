@@ -18,9 +18,11 @@ import java.util.List;
 @RequestMapping("/miniapp/orders")
 public class MiniappOrderController {
     private final MiniappOrderService orderService;
+    private final com.buildmart.service.WxPayService wxPayService;
 
-    public MiniappOrderController(MiniappOrderService orderService) {
+    public MiniappOrderController(MiniappOrderService orderService, com.buildmart.service.WxPayService wxPayService) {
         this.orderService = orderService;
+        this.wxPayService = wxPayService;
     }
 
     @PostMapping
@@ -50,6 +52,18 @@ public class MiniappOrderController {
     @Operation(summary = "取消订单", description = "仅待支付订单可取消，取消后回补库存。")
     public ApiResponse<PurchaseOrder> cancel(@PathVariable Long id) {
         return ApiResponse.ok(orderService.cancel(AuthContext.requireUserId(), id));
+    }
+
+    @PostMapping("/{id}/confirm")
+    @Operation(summary = "确认收货", description = "仅待收货订单可确认，确认后订单完成。")
+    public ApiResponse<PurchaseOrder> confirm(@PathVariable Long id) {
+        return ApiResponse.ok(orderService.confirmReceipt(AuthContext.requireUserId(), id));
+    }
+
+    @PostMapping("/{id}/pay")
+    @Operation(summary = "发起微信支付", description = "对待支付订单进行 JSAPI 下单，返回 wx.requestPayment 所需参数。")
+    public ApiResponse<java.util.Map<String, String>> pay(@PathVariable Long id) {
+        return ApiResponse.ok(wxPayService.createJsapiPayment(AuthContext.requireUserId(), id));
     }
 
     public record CreateOrderRequest(@Schema(description = "订单商品明细") List<OrderItemRequest> items,

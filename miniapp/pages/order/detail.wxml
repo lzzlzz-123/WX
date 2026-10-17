@@ -3,7 +3,7 @@
     <view class="banner-status">{{statusLabel}}</view>
     <view class="banner-sub" wx:if="{{order.status === 'PENDING_PAYMENT'}}">请尽快完成支付，超时订单将自动取消</view>
     <view class="banner-sub" wx:elif="{{order.status === 'PENDING_SHIPMENT'}}">商家正在备货，请耐心等待</view>
-    <view class="banner-sub" wx:elif="{{order.status === 'SHIPPED' || order.status === 'DELIVERING'}}">货物已在配送途中</view>
+    <view class="banner-sub" wx:elif="{{order.status === 'PENDING_RECEIPT' || order.status === 'SHIPPED' || order.status === 'DELIVERING'}}">货物已在配送途中</view>
     <view class="banner-sub" wx:elif="{{order.status === 'COMPLETED'}}">交易完成，感谢采购</view>
     <view class="banner-sub" wx:elif="{{order.status === 'CANCELLED'}}">订单已取消，库存已释放</view>
   </view>
@@ -41,9 +41,24 @@
     <view class="info-row" wx:if="{{order.remark}}"><text class="muted">订单备注</text><text>{{order.remark}}</text></view>
   </view>
 
+  <view class="card" wx:if="{{shipments.length > 0}}">
+    <view class="card-title">物流信息</view>
+    <view wx:for="{{shipments}}" wx:key="id" class="info-row" wx:for-item="ship">
+      <block wx:if="{{ship.pickupCode}}">
+        <text class="muted">自提核销码</text><text>{{ship.pickupCode}}</text>
+      </block>
+      <block wx:else>
+        <text class="muted">{{ship.logisticsCompany || '物流配送'}}</text><text>{{ship.trackingNo}}</text>
+      </block>
+    </view>
+  </view>
+
   <view class="footer" wx:if="{{order.status === 'PENDING_PAYMENT'}}">
     <button class="btn ghost" bindtap="cancelOrder">取消订单</button>
     <button class="btn primary" bindtap="pay">去付款</button>
+  </view>
+  <view class="footer" wx:elif="{{order.status === 'PENDING_RECEIPT' || order.status === 'SHIPPED' || order.status === 'DELIVERING'}}">
+    <button class="btn primary" bindtap="confirmReceipt">确认收货</button>
   </view>
 </view>
 <view wx:elif="{{loading}}" class="page muted" style="text-align:center;padding-top:200rpx">加载中…</view>

@@ -3,6 +3,7 @@ const api = require('../../common/wx-api')
 const STATUS_TEXT = {
   PENDING_PAYMENT: '待付款',
   PENDING_SHIPMENT: '待发货',
+  PENDING_RECEIPT: '待收货',
   PAID: '待发货',
   SHIPPED: '配送中',
   DELIVERING: '配送中',
@@ -27,6 +28,7 @@ Page({
     id: null,
     order: null,
     items: [],
+    shipments: [],
     statusLabel: '',
     deliveryLabel: '',
     loading: true
@@ -55,6 +57,7 @@ Page({
           completedText: fmt(order.completedAt)
         } : null,
         items: detail?.items || [],
+        shipments: detail?.shipments || [],
         statusLabel: STATUS_TEXT[order?.status] || order?.status || '',
         deliveryLabel: DELIVERY_TEXT[order?.deliveryMode] || order?.deliveryMode || ''
       })
@@ -82,9 +85,39 @@ Page({
   copyOrderNo() {
     wx.setClipboardData({ data: this.data.order?.orderNo || '' })
   },
-  pay() {
-    // 支付能力待接入微信支付，先给明确反馈而不是死按钮。
-    wx.showToast({ title: '微信支付接入中，请联系客服线下付款', icon: 'none' })
+  async pay() {
+    try {
+      wx.showLoading({ title: '发起支付...', mask: true })
+      const params = await api.payOrder(this.data.id)
+      wx.hideLoading()
+      await wx.requestPayment({
+        timeStamp: params.timeStamp,
+        nonceStr: params.nonceStr,
+        package: params.package,
+        signType: params.signType || 'RSA',
+        paySign: params.paySign
+      })
+      wx.showToast({ title: '支付成功', icon: 'success' })
+      this.loadDetail()
+    } catch (error) {
+      wx.hideLoading()
+      if (error && error.errMsg && error.errMsg.includes('cancel')) {
+        wx.showToast({ title: '已取消支付', icon: 'none' })
+        return
+      }
+      wx.showToast({ title: error.message || '发起支付失败', icon: 'none' })
+    }
+  },
+  async confirmReceipt() {
+    const { confirm } = await wx.showModal({ title: '确认收货', content: '确认已收到全部货物吗？' })
+    if (!confirm) return
+    try {
+      await api.confirmOrder(this.data.id)
+      wx.showToast({ title: '已确认收货', icon: 'success' })
+      this.loadDetail()
+    } catch (error) {
+      wx.showToast({ title: error.message || '操作失败', icon: 'none' })
+    }
   },
   callReceiver() {
     if (this.data.order?.receiverPhone) wx.makePhoneCall({ phoneNumber: this.data.order.receiverPhone })

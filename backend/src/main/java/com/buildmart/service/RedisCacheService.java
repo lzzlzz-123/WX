@@ -47,6 +47,19 @@ public class RedisCacheService {
         }
     }
 
+    /**
+     * SET NX EX 语义：key 不存在才写入。用于幂等占位（如支付回调按微信交易号去重）。
+     * Redis 故障时返回 false 表示占位失败，调用方应回源数据库做幂等兜底判断。
+     */
+    public boolean setIfAbsent(String key, String value, Duration ttl) {
+        try {
+            return Boolean.TRUE.equals(redis.opsForValue().setIfAbsent(key, value, ttl));
+        } catch (RuntimeException ex) {
+            log.warn("Redis setIfAbsent skipped for key {}: {}", key, ex.getMessage());
+            return false;
+        }
+    }
+
     public long increment(String key) {
         try {
             Long value = redis.opsForValue().increment(key);

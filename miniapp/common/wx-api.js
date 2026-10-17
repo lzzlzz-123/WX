@@ -234,6 +234,8 @@ const api = {
   orders: params => apiRequest(`/orders?page=${params?.page || 1}&size=${params?.size || 20}${params?.status ? `&status=${encodeURIComponent(params.status)}` : ''}`),
   order: id => apiRequest(`/orders/${id}`),
   cancelOrder: id => apiRequest(`/orders/${id}/cancel`, { method: 'POST' }),
+  confirmOrder: id => apiRequest(`/orders/${id}/confirm`, { method: 'POST' }),
+  payOrder: id => apiRequest(`/orders/${id}/pay`, { method: 'POST' }),
   createInquiry: data => apiRequest('/inquiries', { method: 'POST', data }),
   inquiries: params => apiRequest(`/inquiries?page=${params?.page || 1}&size=${params?.size || 20}${params?.status ? `&status=${encodeURIComponent(params.status)}` : ''}`),
   invoices: () => apiRequest('/invoices'),

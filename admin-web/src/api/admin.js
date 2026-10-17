@@ -10,7 +10,8 @@ export const adminApi = {
   saveProduct: payload => http.post('/admin/products', payload),
   changeProductStatus: (id, value) => http.patch(`/admin/products/${id}/status`, null, { params: { value } }),
   orders: params => http.get('/admin/orders', { params }),
-  shipOrder: id => http.post(`/admin/orders/${id}/ship`),
+  shipOrder: (id, payload) => http.post(`/admin/orders/${id}/ship`, payload),
+  refundOrder: (id, payload) => http.post(`/admin/orders/${id}/refund`, payload),
   inquiries: params => http.get('/admin/inquiries', { params }),
   inquiryQuote: (id, data) => http.post(`/admin/inquiries/${id}/quote`, data),
   // 客户管理

@@ -187,6 +187,36 @@ CREATE TABLE IF NOT EXISTS sys_setting (
   UNIQUE KEY uk_setting_key (setting_key)
 ) ENGINE=InnoDB;
 
+-- 支付/退款流水（微信支付 V3）
+CREATE TABLE IF NOT EXISTS payment_record (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  order_id BIGINT NOT NULL,
+  order_no VARCHAR(40) NOT NULL,
+  type VARCHAR(12) NOT NULL COMMENT 'PAY 支付 / REFUND 退款',
+  transaction_id VARCHAR(64) COMMENT '微信支付交易号或微信退款单号',
+  out_refund_no VARCHAR(64) COMMENT '商户退款单号',
+  amount DECIMAL(14,2) NOT NULL,
+  status VARCHAR(16) NOT NULL COMMENT 'SUCCESS/PROCESSING/FAILED/CLOSED',
+  raw_notify TEXT COMMENT '回调原文，用于对账排查',
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  INDEX idx_record_order (order_id),
+  INDEX idx_record_transaction (transaction_id),
+  INDEX idx_record_out_refund (out_refund_no)
+) ENGINE=InnoDB;
+
+-- 订单发货/自提记录
+CREATE TABLE IF NOT EXISTS order_shipment (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  order_id BIGINT NOT NULL,
+  delivery_mode VARCHAR(24) COMMENT 'CITY_DELIVERY/LOGISTICS/PICKUP',
+  logistics_company VARCHAR(80),
+  tracking_no VARCHAR(64),
+  pickup_code VARCHAR(12) COMMENT '自提核销码',
+  remark VARCHAR(300),
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  INDEX idx_shipment_order (order_id)
+) ENGINE=InnoDB;
+
 INSERT INTO sys_setting (setting_key, setting_value, description) VALUES
   ('shop.name', '筑云清松', '商城名称'),
   ('shop.contact_phone', '400-000-0000', '客服电话'),

@@ -32,7 +32,11 @@
 
 服务检查：`GET /api/health`。登录接口是 `POST`，不能直接在浏览器地址栏用 `GET` 打开。
 
-小程序接口：`POST /api/miniapp/auth/login`、`GET /api/miniapp/catalog/categories`、`GET /api/miniapp/catalog/products`、`GET /api/miniapp/catalog/products/{id}`、`GET/POST /api/miniapp/cart`、`PUT/DELETE /api/miniapp/cart/{id}`、`GET/POST/DELETE /api/miniapp/addresses`、`POST/GET /api/miniapp/orders`、`GET /api/miniapp/orders/{id}`、`POST /api/miniapp/inquiries`。登录请求体只使用微信 `wx.login/uni.login` 返回的一次性 `code`（以及可选昵称、手机号），后端通过微信 `code2Session` 换取 `openid/unionid`，再幂等创建或更新 `sys_user` 并签发 JWT。
+小程序接口：`POST /api/miniapp/auth/login`、`GET /api/miniapp/catalog/categories`、`GET /api/miniapp/catalog/products`、`GET /api/miniapp/catalog/products/{id}`、`GET/POST /api/miniapp/cart`、`PUT/DELETE /api/miniapp/cart/{id}`、`GET/POST/DELETE /api/miniapp/addresses`、`POST/GET /api/miniapp/orders`、`GET /api/miniapp/orders/{id}`、`POST /api/miniapp/orders/{id}/cancel`、`POST /api/miniapp/orders/{id}/pay`（微信支付 JSAPI 下单）、`POST /api/miniapp/orders/{id}/confirm`（确认收货）、`POST /api/miniapp/inquiries`。登录请求体只使用微信 `wx.login/uni.login` 返回的一次性 `code`（以及可选昵称、手机号），后端通过微信 `code2Session` 换取 `openid/unionid`，再幂等创建或更新 `sys_user` 并签发 JWT。
+
+微信支付闭环：小程序 `POST /api/miniapp/orders/{id}/pay` 返回 `wx.requestPayment` 参数；支付结果通知 `POST /api/pay/wechat/notify`、退款结果通知 `POST /api/pay/wechat/refund-notify`（公开路径，由微信支付 V3 回调验签保证安全；按微信交易号幂等，重复通知不会重复入账）；管理端退款 `POST /api/admin/orders/{id}/refund`。启用支付需配置环境变量 `WECHAT_PAY_ENABLED=true`、`WECHAT_PAY_MCHID`、`WECHAT_PAY_SERIAL_NO`、`WECHAT_PAY_PRIVATE_KEY_PATH`（商户 API 私钥 apiclient_key.pem）、`WECHAT_PAY_API_V3_KEY`、`WECHAT_PAY_NOTIFY_URL`（公网 HTTPS，指向 `/api/pay/wechat/notify`），退款通知地址自动派生为同路径的 `/refund-notify`。未配置时支付接口明确报错，不伪装成功。
+
+订单状态机：`PENDING_PAYMENT`（待支付，超时由定时任务按 `order.auto_cancel_minutes` 设置自动关单并回补库存，默认 30 分钟）→ 支付成功 `PENDING_SHIPMENT`（待发货）→ 管理端发货 `PENDING_RECEIPT`（待收货，配送订单需录入物流公司/运单号，自提订单自动生成核销码）→ 用户确认收货 `COMPLETED`；待支付可用户取消 `CANCELLED`，待发货可管理端退款 `REFUNDED`。所有状态流转使用数据库 CAS 更新，防止并发重复流转和库存重复回补。
 
 登录成功响应为 `{"code":0,"message":"ok","data":{"userId":1,"nickname":"微信用户","phone":null,"token":"..."}}`。登录失败时 `data` 为 `null`，`code` 使用稳定的负数错误码：`-1001`（缺少 code）、`-1002`（code 已提交）、`-1003`（code 无效或过期）、`-1101`（微信配置错误）、`-1102`（微信服务不可用）、`-1103`（微信响应格式异常）、`-1104`（微信未返回用户标识）、`-1201`（用户被禁用）、`-1202`（用户信息保存失败）。小程序应清理旧 token 后重新调用 `wx.login`，不要重复提交同一个 code。
 

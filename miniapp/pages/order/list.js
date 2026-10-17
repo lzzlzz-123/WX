@@ -4,7 +4,7 @@ const TABS = [
   { label: '全部', status: '' },
   { label: '待付款', status: 'PENDING_PAYMENT' },
   { label: '待发货', status: 'PENDING_SHIPMENT' },
-  { label: '配送中', status: 'SHIPPED' },
+  { label: '待收货', status: 'PENDING_RECEIPT' },
   { label: '已完成', status: 'COMPLETED' },
   { label: '已取消', status: 'CANCELLED' }
 ]
@@ -12,6 +12,7 @@ const TABS = [
 const STATUS_TEXT = {
   PENDING_PAYMENT: '待付款',
   PENDING_SHIPMENT: '待发货',
+  PENDING_RECEIPT: '待收货',
   PAID: '待发货',
   SHIPPED: '配送中',
   DELIVERING: '配送中',
@@ -97,8 +98,25 @@ Page({
       wx.showToast({ title: error.message || '取消失败', icon: 'none' })
     }
   },
-  pay(event) {
-    // 支付能力待接入微信支付，先给明确反馈而不是死按钮。
-    wx.showToast({ title: `订单 ${event.currentTarget.dataset.no} 待接入微信支付`, icon: 'none' })
+  async pay(event) {
+    const id = event.currentTarget.dataset.id
+    try {
+      wx.showLoading({ title: '发起支付...', mask: true })
+      const params = await api.payOrder(id)
+      wx.hideLoading()
+      await wx.requestPayment({
+        timeStamp: params.timeStamp,
+        nonceStr: params.nonceStr,
+        package: params.package,
+        signType: params.signType || 'RSA',
+        paySign: params.paySign
+      })
+      wx.showToast({ title: '支付成功', icon: 'success' })
+      this.reload()
+    } catch (error) {
+      wx.hideLoading()
+      if (error && error.errMsg && error.errMsg.includes('cancel')) return
+      wx.showToast({ title: error.message || '发起支付失败', icon: 'none' })
+    }
   }
 })
