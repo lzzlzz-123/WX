@@ -98,6 +98,7 @@ Page({
         paySign: params.paySign
       })
       wx.showToast({ title: '支付成功', icon: 'success' })
+      this.subscribeOrderShipped()
       this.loadDetail()
     } catch (error) {
       wx.hideLoading()
@@ -117,6 +118,34 @@ Page({
       this.loadDetail()
     } catch (error) {
       wx.showToast({ title: error.message || '操作失败', icon: 'none' })
+    }
+  },
+  // 支付成功后请求订阅"订单发货"通知（模板未配置时静默跳过）
+  async subscribeOrderShipped() {
+    try {
+      const templates = await api.notifyTemplates()
+      if (templates && templates.orderShipped) {
+        await wx.requestSubscribeMessage({ tmplIds: [templates.orderShipped] })
+      }
+    } catch (e) { /* 用户拒绝或模板未配置，均不影响流程 */ }
+  },
+  async applyInvoice() {
+    try {
+      const titles = await api.invoices()
+      if (!titles || !titles.length) {
+        wx.showToast({ title: '请先在"我的-发票抬头"中添加抬头', icon: 'none' })
+        return
+      }
+      const title = titles.find(t => t.isDefault === 1 || t.isDefault === true) || titles[0]
+      const { confirm } = await wx.showModal({
+        title: '申请开票',
+        content: `抬头：${title.title || title.companyName || ''}\n金额：¥${this.data.order.payableAmount}`
+      })
+      if (!confirm) return
+      await api.applyInvoice({ orderId: this.data.id, titleId: title.id })
+      wx.showToast({ title: '开票申请已提交', icon: 'success' })
+    } catch (error) {
+      wx.showToast({ title: error.message || '申请失败', icon: 'none' })
     }
   },
   callReceiver() {

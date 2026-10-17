@@ -7,6 +7,7 @@ import com.buildmart.entity.OrderShipment;
 import com.buildmart.entity.PurchaseOrder;
 import com.buildmart.mapper.OrderShipmentMapper;
 import com.buildmart.mapper.PurchaseOrderMapper;
+import com.buildmart.mapper.SysUserMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,12 +19,17 @@ public class OrderService {
     private final PurchaseOrderMapper orderMapper;
     private final OrderShipmentMapper shipmentMapper;
     private final WxPayService wxPayService;
+    private final SysUserMapper userMapper;
+    private final WxSubscribeMessageService subscribeMessageService;
 
     public OrderService(PurchaseOrderMapper orderMapper, OrderShipmentMapper shipmentMapper,
-                        WxPayService wxPayService) {
+                        WxPayService wxPayService, SysUserMapper userMapper,
+                        WxSubscribeMessageService subscribeMessageService) {
         this.orderMapper = orderMapper;
         this.shipmentMapper = shipmentMapper;
         this.wxPayService = wxPayService;
+        this.userMapper = userMapper;
+        this.subscribeMessageService = subscribeMessageService;
     }
 
     public PageResult<PurchaseOrder> page(long page, long size, String status) {
@@ -59,6 +65,17 @@ public class OrderService {
         shipment.setPickupCode(selfPickup ? nextPickupCode() : null);
         shipment.setRemark(remark);
         shipmentMapper.insert(shipment);
+        // 发货订阅消息（模板未配置或推送失败均不影响发货主流程）
+        try {
+            com.buildmart.entity.SysUser user = userMapper.selectById(order.getUserId());
+            if (user != null) {
+                String info = selfPickup ? "自提核销码 " + shipment.getPickupCode()
+                        : logisticsCompany + " " + trackingNo;
+                subscribeMessageService.notifyOrderShipped(user.getOpenid(), order.getOrderNo(), info);
+            }
+        } catch (Exception ex) {
+            // 推送失败不影响主流程
+        }
         return shipment;
     }
 

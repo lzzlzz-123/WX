@@ -19,11 +19,19 @@ public class CatalogController {
     }
 
     @GetMapping("/products")
-    @Operation(summary = "分页查询在售商品", description = "仅返回状态为在售的商品。")
+    @Operation(summary = "分页查询在售商品", description = "keyword 模糊匹配名称/SKU/规格，支持品牌与分类筛选。")
     public ApiResponse<PageResult<Product>> products(@RequestParam(defaultValue = "1") long page,
                                                       @RequestParam(defaultValue = "20") long size,
-                                                      @RequestParam(required = false) String keyword) {
-        return ApiResponse.ok(productService.page(page, size, keyword, 1));
+                                                      @RequestParam(required = false) String keyword,
+                                                      @RequestParam(required = false) String brand,
+                                                      @RequestParam(required = false) Long categoryId) {
+        return ApiResponse.ok(productService.page(page, size, keyword, brand, categoryId, 1));
+    }
+
+    @GetMapping("/brands")
+    @Operation(summary = "在售商品品牌列表", description = "用于小程序筛选面板。")
+    public ApiResponse<java.util.List<String>> brands() {
+        return ApiResponse.ok(productService.brands());
     }
 
     @GetMapping("/products/{id}")

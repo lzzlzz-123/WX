@@ -217,13 +217,45 @@ CREATE TABLE IF NOT EXISTS order_shipment (
   INDEX idx_shipment_order (order_id)
 ) ENGINE=InnoDB;
 
+-- 库存盘点调整流水
+CREATE TABLE IF NOT EXISTS stock_log (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  product_id BIGINT NOT NULL,
+  delta DECIMAL(14,3) NOT NULL COMMENT '正数入库，负数出库',
+  stock_after DECIMAL(14,3) NOT NULL,
+  reason VARCHAR(300),
+  operator_admin_id BIGINT,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  INDEX idx_stock_log_product (product_id)
+) ENGINE=InnoDB;
+
+-- 订单开票申请
+CREATE TABLE IF NOT EXISTS invoice_request (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  order_id BIGINT NOT NULL,
+  user_id BIGINT NOT NULL,
+  title_id BIGINT COMMENT '关联发票抬头',
+  amount DECIMAL(14,2) NOT NULL,
+  status VARCHAR(16) NOT NULL DEFAULT 'PENDING' COMMENT 'PENDING/ISSUED/REJECTED',
+  reject_reason VARCHAR(300),
+  issued_at DATETIME,
+  remark VARCHAR(300),
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY uk_invoice_order (order_id),
+  INDEX idx_invoice_user (user_id, status)
+) ENGINE=InnoDB;
+
 INSERT INTO sys_setting (setting_key, setting_value, description) VALUES
   ('shop.name', '筑云清松', '商城名称'),
   ('shop.contact_phone', '400-000-0000', '客服电话'),
   ('order.auto_cancel_minutes', '30', '待支付订单自动取消时间（分钟）'),
   ('order.default_freight', '0.00', '默认运费（元）'),
   ('inquiry.quote_valid_days', '7', '询价单报价默认有效天数'),
-  ('stock.low_warning_enabled', 'true', '是否开启低库存预警')
+  ('stock.low_warning_enabled', 'true', '是否开启低库存预警'),
+  ('stock.low_warning_threshold', '50', '低库存预警阈值（按商品主计量单位）'),
+  ('wechat.template.quote_replied', '', '订阅消息模板ID：询价报价回复通知'),
+  ('wechat.template.order_shipped', '', '订阅消息模板ID：订单发货通知')
 ON DUPLICATE KEY UPDATE description = VALUES(description);
 
 INSERT INTO product_category (name, sort_no) VALUES

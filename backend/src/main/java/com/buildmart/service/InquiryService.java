@@ -7,6 +7,7 @@ import com.buildmart.entity.Inquiry;
 import com.buildmart.entity.InquiryQuote;
 import com.buildmart.mapper.InquiryMapper;
 import com.buildmart.mapper.InquiryQuoteMapper;
+import com.buildmart.mapper.SysUserMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,10 +23,15 @@ import java.util.stream.Collectors;
 public class InquiryService {
     private final InquiryMapper inquiryMapper;
     private final InquiryQuoteMapper quoteMapper;
+    private final SysUserMapper userMapper;
+    private final WxSubscribeMessageService subscribeMessageService;
 
-    public InquiryService(InquiryMapper inquiryMapper, InquiryQuoteMapper quoteMapper) {
+    public InquiryService(InquiryMapper inquiryMapper, InquiryQuoteMapper quoteMapper,
+                          SysUserMapper userMapper, WxSubscribeMessageService subscribeMessageService) {
         this.inquiryMapper = inquiryMapper;
         this.quoteMapper = quoteMapper;
+        this.userMapper = userMapper;
+        this.subscribeMessageService = subscribeMessageService;
     }
 
     public PageResult<Inquiry> page(long page, long size, String status) {
@@ -70,6 +76,17 @@ public class InquiryService {
 
         inquiry.setStatus("QUOTED");
         inquiryMapper.updateById(inquiry);
+
+        // 报价回复订阅消息（模板未配置或推送失败均不影响报价主流程）
+        try {
+            com.buildmart.entity.SysUser user = userMapper.selectById(inquiry.getUserId());
+            if (user != null) {
+                subscribeMessageService.notifyQuoteReplied(user.getOpenid(), inquiry.getProductName(),
+                        quotePrice.stripTrailingZeros().toPlainString());
+            }
+        } catch (Exception ex) {
+            // 推送失败不影响主流程
+        }
         return quote;
     }
 

@@ -58,7 +58,11 @@
     <button class="btn primary" bindtap="pay">去付款</button>
   </view>
   <view class="footer" wx:elif="{{order.status === 'PENDING_RECEIPT' || order.status === 'SHIPPED' || order.status === 'DELIVERING'}}">
+    <button class="btn ghost" bindtap="applyInvoice">申请开票</button>
     <button class="btn primary" bindtap="confirmReceipt">确认收货</button>
+  </view>
+  <view class="footer" wx:elif="{{order.status === 'PENDING_SHIPMENT' || order.status === 'COMPLETED'}}">
+    <button class="btn ghost" bindtap="applyInvoice">申请开票</button>
   </view>
 </view>
 <view wx:elif="{{loading}}" class="page muted" style="text-align:center;padding-top:200rpx">加载中…</view>

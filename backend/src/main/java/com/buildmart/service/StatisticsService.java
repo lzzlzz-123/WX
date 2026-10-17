@@ -34,13 +34,16 @@ public class StatisticsService {
     private final SysUserMapper userMapper;
     private final ProductMapper productMapper;
     private final InquiryMapper inquiryMapper;
+    private final SettingService settingService;
 
     public StatisticsService(PurchaseOrderMapper orderMapper, SysUserMapper userMapper,
-                             ProductMapper productMapper, InquiryMapper inquiryMapper) {
+                             ProductMapper productMapper, InquiryMapper inquiryMapper,
+                             SettingService settingService) {
         this.orderMapper = orderMapper;
         this.userMapper = userMapper;
         this.productMapper = productMapper;
         this.inquiryMapper = inquiryMapper;
+        this.settingService = settingService;
     }
 
     /** Overview cards: cumulative + today figures for orders, sales, customers, inquiries, products. */
@@ -63,9 +66,11 @@ public class StatisticsService {
 
         long activeProductCount = productMapper.selectCount(new LambdaQueryWrapper<Product>()
                 .eq(Product::getStatus, 1));
+        String threshold = settingService.get("stock.low_warning_threshold", "50").replaceAll("[^0-9.]", "");
+        if (threshold.isBlank()) threshold = "50";
         long lowStockCount = productMapper.selectCount(new QueryWrapper<Product>()
                 .eq("status", 1)
-                .apply("stock <= min_order_qty"));
+                .apply("stock <= GREATEST(min_order_qty, " + threshold + ")"));
 
         long pendingInquiryCount = inquiryMapper.selectCount(new LambdaQueryWrapper<Inquiry>()
                 .eq(Inquiry::getStatus, "PENDING_QUOTE"));

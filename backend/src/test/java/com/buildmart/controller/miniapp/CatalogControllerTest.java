@@ -36,7 +36,7 @@ class CatalogControllerTest {
         product.setId(1L);
         product.setSku("SN-PO425-50");
         product.setName("普通硅酸盐水泥");
-        when(productService.page(1L, 20L, "水泥", 1))
+        when(productService.page(1L, 20L, "水泥", null, null, 1))
                 .thenReturn(new PageResult<>(List.of(product), 1L, 1L, 20L));
 
         mockMvc.perform(get("/miniapp/catalog/products")
@@ -48,6 +48,6 @@ class CatalogControllerTest {
                 .andExpect(jsonPath("$.data.records[0].sku").value("SN-PO425-50"))
                 .andExpect(jsonPath("$.data.total").value(1));
 
-        verify(productService).page(1L, 20L, "水泥", 1);
+        verify(productService).page(1L, 20L, "水泥", null, null, 1);
     }
 }
