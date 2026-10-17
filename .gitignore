@@ -1,0 +1,43 @@
+# ==========================================
+# 1. 忽略编译产物、依赖和构建文件夹
+# ==========================================
+node_modules/
+dist/
+target/
+build/
+*.class
+*.jar
+*.war
+
+# ==========================================
+# 2. 忽略敏感配置（千万不要传密码和密钥！）
+# ==========================================
+backend/src/main/resources/application*.yml
+backend/src/main/resources/application*.properties
+.env
+.env.local
+admin-web/.npmrc
+maven-settings.xml
+
+# ==========================================
+# 3. 忽略 Nginx 运行文件（保留配置即可）
+# ==========================================
+nginx-1.26.2 - wx/logs/
+nginx-1.26.2 - wx/html/
+nginx-1.26.2 - wx/*.exe
+nginx-1.26.2 - wx/*.dll
+nginx-1.26.2 - wx/conf/nginx.conf.before-buildmart
+
+# ==========================================
+# 4. 忽略 AI 助手缓存及本地环境脚本
+# ==========================================
+.workbuddy/
+backend/start-backend.bat
+docker-compose.yml
+
+# ==========================================
+# 5. 忽略系统文件和日志
+# ==========================================
+.DS_Store
+Thumbs.db
+*.log

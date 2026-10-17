@@ -1,0 +1,49 @@
+<view class="page" wx:if="{{order}}">
+  <view class="banner status-bg-{{order.status}}">
+    <view class="banner-status">{{statusLabel}}</view>
+    <view class="banner-sub" wx:if="{{order.status === 'PENDING_PAYMENT'}}">请尽快完成支付，超时订单将自动取消</view>
+    <view class="banner-sub" wx:elif="{{order.status === 'PENDING_SHIPMENT'}}">商家正在备货，请耐心等待</view>
+    <view class="banner-sub" wx:elif="{{order.status === 'SHIPPED' || order.status === 'DELIVERING'}}">货物已在配送途中</view>
+    <view class="banner-sub" wx:elif="{{order.status === 'COMPLETED'}}">交易完成，感谢采购</view>
+    <view class="banner-sub" wx:elif="{{order.status === 'CANCELLED'}}">订单已取消，库存已释放</view>
+  </view>
+
+  <view class="card receiver">
+    <view class="receiver-line"><text class="receiver-name">{{order.receiverName}}</text><text bindtap="callReceiver">{{order.receiverPhone}}</text></view>
+    <view class="muted">{{order.receiverAddress}}</view>
+    <view class="muted" wx:if="{{deliveryLabel}}">配送方式：{{deliveryLabel}}</view>
+  </view>
+
+  <view class="card">
+    <view class="card-title">商品明细</view>
+    <view wx:for="{{items}}" wx:key="id" class="goods-row">
+      <view class="goods-info">
+        <text class="goods-name">{{item.productName}}</text>
+        <text class="muted" wx:if="{{item.specification}}">{{item.specification}}</text>
+      </view>
+      <view class="goods-amount">
+        <text>¥ {{item.unitPrice}} × {{item.quantity}}{{item.unit}}</text>
+        <text class="goods-sum">¥ {{item.amount}}</text>
+      </view>
+    </view>
+    <view class="amount-row"><text class="muted">商品金额</text><text>¥ {{order.totalAmount}}</text></view>
+    <view class="amount-row"><text class="muted">运费</text><text>¥ {{order.freightAmount}}</text></view>
+    <view class="amount-row total"><text>应付金额</text><text class="total-value">¥ {{order.payableAmount}}</text></view>
+  </view>
+
+  <view class="card">
+    <view class="card-title">订单信息</view>
+    <view class="info-row" bindtap="copyOrderNo"><text class="muted">订单编号</text><text>{{order.orderNo}}（点击复制）</text></view>
+    <view class="info-row"><text class="muted">下单时间</text><text>{{order.createdText}}</text></view>
+    <view class="info-row" wx:if="{{order.paidText}}"><text class="muted">支付时间</text><text>{{order.paidText}}</text></view>
+    <view class="info-row" wx:if="{{order.shippedText}}"><text class="muted">发货时间</text><text>{{order.shippedText}}</text></view>
+    <view class="info-row" wx:if="{{order.completedText}}"><text class="muted">完成时间</text><text>{{order.completedText}}</text></view>
+    <view class="info-row" wx:if="{{order.remark}}"><text class="muted">订单备注</text><text>{{order.remark}}</text></view>
+  </view>
+
+  <view class="footer" wx:if="{{order.status === 'PENDING_PAYMENT'}}">
+    <button class="btn ghost" bindtap="cancelOrder">取消订单</button>
+    <button class="btn primary" bindtap="pay">去付款</button>
+  </view>
+</view>
+<view wx:elif="{{loading}}" class="page muted" style="text-align:center;padding-top:200rpx">加载中…</view>

@@ -1,0 +1,9 @@
+<view class="page home-page">
+  <view class="home-head"><view><text class="greeting">采购，就上筑云清松</text><text class="muted">建筑材料，一站式集采</text></view><text class="notice">消息</text></view>
+  <view class="search" bindtap="goGoods">⌕ <text>搜索商品、规格或品牌</text></view>
+  <view class="hero"><text class="hero-kicker">企业采购专享</text><text class="hero-title">量大价优，\n当天报价</text><text class="hero-note">覆盖水泥、钢材、砂石等建材品类</text><button bindtap="goInquiry">发布询价</button></view>
+  <view class="section-title"><text>采购分类</text><text class="muted" bindtap="goGoods">全部 ›</text></view>
+  <view class="category-list"><view wx:for="{{categories}}" wx:key="*this" class="category" bindtap="goGoods"><view class="category-icon">{{item[0]}}</view><text>{{item}}</text></view></view>
+  <view class="section-title"><text>热销推荐</text><text class="muted" bindtap="goGoods">更多 ›</text></view>
+  <view wx:for="{{products}}" wx:key="name" class="product card" bindtap="goGoods"><view class="product-cover">建材</view><text class="product-name">{{item.name}}</text><text class="muted">{{item.desc}}</text><text class="price">¥ {{item.price}} <text class="unit">{{item.unit}}</text></text></view>
+</view>

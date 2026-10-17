@@ -1,0 +1,11 @@
+.page{min-height:100vh;background:#f5f7f9;padding:30rpx}
+.card{background:#fff;border-radius:18rpx;padding:40rpx 30rpx}
+.label{font-size:26rpx;color:#365466;font-weight:700;margin:20rpx 0}
+.avatar-btn{width:160rpx;height:160rpx;border-radius:50%;padding:0;margin:10rpx 0 30rpx;overflow:hidden;background:#edf5f8;display:flex;align-items:center;justify-content:center}
+.avatar-btn::after{border:none}
+.avatar-img{width:100%;height:100%}
+.avatar-placeholder{font-size:24rpx;color:#4a91b8}
+.nickname{border-bottom:1rpx solid #edf1f3;height:88rpx;font-size:30rpx;color:#213e51}
+.tip{font-size:22rpx;color:#97a5ad;margin:30rpx 0}
+.save{background:#267fc6;color:#fff;border-radius:14rpx;font-size:30rpx}
+.save[disabled]{opacity:.6}

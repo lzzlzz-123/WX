@@ -1,0 +1,19 @@
+.empty{display:flex;flex-direction:column;align-items:center;gap:16rpx;padding:100rpx 0}
+.empty-icon{font-size:70rpx}
+.addr-title{display:flex;align-items:center;gap:16rpx}
+.addr-name{font-size:29rpx;font-weight:700;color:#28495b}
+.addr-phone{font-size:24rpx;color:#5b7482}
+.tag{font-size:19rpx;color:#2e8ecd;border:1px solid #2e8ecd;border-radius:8rpx;padding:2rpx 10rpx}
+.addr-text{font-size:24rpx;color:#405d6b;margin-top:12rpx;line-height:1.5}
+.addr-ops{display:flex;justify-content:flex-end;gap:32rpx;border-top:1px solid #edf1f3;margin-top:16rpx;padding-top:14rpx}
+.op{font-size:24rpx;color:#2875a8}
+.op.danger{color:#c0392b}
+.form-title{display:block;font-size:29rpx;font-weight:700;color:#28495b;margin-bottom:18rpx}
+.field{min-height:82rpx;border-bottom:1px solid #edf1f3;display:flex;align-items:center;gap:12rpx}
+.field>text:first-child{width:145rpx;color:#5b7482;font-size:23rpx;flex-shrink:0}
+.field input{flex:1;font-size:22rpx}
+.area{align-items:flex-start;padding:14rpx 0}
+.area textarea{flex:1;height:100rpx;font-size:22rpx}
+.switch-field{justify-content:space-between}
+.submit{margin-top:28rpx;background:#2e8ecd;color:#fff;border-radius:16rpx;height:82rpx;line-height:82rpx;font-size:27rpx}
+.cancel{margin-top:16rpx;background:#f4f7f9;color:#5b7482;border-radius:16rpx;height:82rpx;line-height:82rpx;font-size:27rpx}

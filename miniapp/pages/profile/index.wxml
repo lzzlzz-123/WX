@@ -1,0 +1,13 @@
+<view class="page">
+  <view class="card">
+    <view class="label">头像</view>
+    <button class="avatar-btn" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
+      <image wx:if="{{avatarPreview}}" class="avatar-img" src="{{avatarPreview}}" mode="aspectFill" />
+      <view wx:else class="avatar-placeholder">选择头像</view>
+    </button>
+    <view class="label">昵称</view>
+    <input class="nickname" type="nickname" placeholder="请输入微信昵称" value="{{nickname}}" bindinput="onNicknameInput" />
+    <view class="tip">头像和昵称将展示在"我的"页面，仅用于采购服务。</view>
+    <button class="save" loading="{{saving}}" disabled="{{saving}}" bindtap="onSave">保存</button>
+  </view>
+</view>

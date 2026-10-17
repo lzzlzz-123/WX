@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="xz" />
+        <module name="commons-io (1)" />
+        <module name="opentest4j (1)" />
+        <module name="classmate" />
+        <module name="spring-jcl" />
+        <module name="commons-io" />
+        <module name="spring-web" />
+        <module name="netty-buffer" />
+        <module name="byte-buddy-agent" />
+        <module name="netty-resolver" />
+        <module name="netty-transport" />
+        <module name="spring-webmvc" />
+        <module name="jdependency" />
+        <module name="spring-expression" />
+        <module name="mybatis-plus-spring-boot3-starter" />
+        <module name="aopalliance" />
+        <module name="jdom2" />
+        <module name="micrometer-commons" />
+        <module name="xmlunit-core" />
+        <module name="lettuce-core" />
+        <module name="commons-io (2)" />
+        <module name="jakarta.activation-api" />
+        <module name="jakarta.validation-api" />
+        <module name="micrometer-observation" />
+        <module name="json-smart" />
+        <module name="lombok" />
+        <module name="spring-context" />
+        <module name="mysql-connector-j" />
+        <module name="spring-jdbc" />
+        <module name="mybatis-plus-annotation" />
+        <module name="apiguardian-api" />
+        <module name="mockito-core" />
+        <module name="javax.inject" />
+        <module name="antlr4-runtime" />
+        <module name="jakarta.annotation-api" />
+        <module name="spring-test" />
+        <module name="reactor-core" />
+        <module name="assertj-core" />
+        <module name="mybatis-plus-core" />
+        <module name="awaitility" />
+        <module name="mybatis-plus-extension" />
+        <module name="commons-io (3)" />
+        <module name="mybatis" />
+        <module name="netty-common" />
+        <module name="spring-core (1)" />
+        <module name="slf4j-api" />
+        <module name="springdoc-openapi-starter-webmvc-ui" />
+        <module name="mybatis-plus-spring-boot-autoconfigure" />
+        <module name="spring-core" />
+        <module name="commons-codec" />
+        <module name="reactive-streams" />
+        <module name="opentest4j" />
+        <module name="jjwt-jackson" />
+        <module name="jul-to-slf4j" />
+        <module name="mockito-junit-jupiter" />
+        <module name="slf4j-api (2)" />
+        <module name="spring-aop" />
+        <module name="netty-handler" />
+        <module name="accessors-smart" />
+        <module name="mybatis-spring" />
+        <module name="javax.annotation-api" />
+        <module name="buildmart-backend" />
+        <module name="netty-transport-native-unix-common" />
+        <module name="spring-beans" />
+        <module name="slf4j-api (1)" />
+        <module name="jjwt-impl" />
+        <module name="netty-codec" />
+        <module name="micrometer-observation (1)" />
+        <module name="jsonassert" />
+        <module name="springdoc-openapi-starter-common" />
+        <module name="springdoc-openapi-starter-webmvc-api" />
+        <module name="spring-context-support" />
+        <module name="jjwt-api" />
+        <module name="objenesis" />
+        <module name="spring-tx" />
+        <module name="byte-buddy" />
+        <module name="micrometer-commons (1)" />
+        <module name="hamcrest" />
+        <module name="mybatis-plus" />
+        <module name="spring-jcl (1)" />
+        <module name="spring-oxm" />
+        <module name="HikariCP" />
+        <module name="snakeyaml" />
+        <module name="cdi-api" />
+        <module name="swagger-ui" />
+      </profile>
+    </annotationProcessing>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="buildmart-backend" options="-parameters" />
+      <module name="byte-buddy" options="-Xlint:all,-options,-processing" />
+      <module name="byte-buddy-agent" options="-Xlint:all,-options,-processing" />
+      <module name="jakarta.activation-api" options="-Xlint:all" />
+      <module name="jakarta.annotation-api" options="-Xlint:all" />
+      <module name="jakarta.validation-api" options="-Xlint:all" />
+      <module name="javax.annotation-api" options="-Xlint:unchecked" />
+      <module name="mybatis" options="-parameters" />
+      <module name="mybatis-spring" options="-parameters" />
+      <module name="mybatis-spring.main" options="-parameters" />
+      <module name="mybatis-spring.test" options="-parameters" />
+      <module name="netty-buffer" options="-Xlint:-options" />
+      <module name="netty-codec" options="-Xlint:-options" />
+      <module name="netty-common" options="-Xlint:-options" />
+      <module name="netty-handler" options="-Xlint:-options" />
+      <module name="netty-parent" options="-Xlint:-options" />
+      <module name="netty-resolver" options="-Xlint:-options" />
+      <module name="netty-transport" options="-Xlint:-options" />
+      <module name="netty-transport-native-unix-common" options="-Xlint:-options" />
+      <module name="springdoc-openapi-starter-common" options="-parameters" />
+      <module name="springdoc-openapi-starter-webmvc-api" options="-parameters" />
+      <module name="springdoc-openapi-starter-webmvc-ui" options="-parameters" />
+    </option>
+  </component>
+</project>

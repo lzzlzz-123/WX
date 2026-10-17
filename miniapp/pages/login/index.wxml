@@ -1,0 +1,50 @@
+<view class="page">
+  <view class="hero">
+    <view class="logo">筑</view>
+    <view class="brand">筑云清松</view>
+    <view class="slogan">建筑材料 · 一站式集采</view>
+  </view>
+
+  <view class="tip-card">
+    <view class="tip-quote">“</view>
+    <view class="tip-title">{{tip.title}}</view>
+    <view class="tip-sub">{{tip.sub}}</view>
+  </view>
+
+  <view class="mode-tabs">
+    <text class="{{loginMode === 'oneClick' ? 'active' : ''}}" data-mode="oneClick" bindtap="switchMode">一键登录</text>
+    <text class="{{loginMode === 'sms' ? 'active' : ''}}" data-mode="sms" bindtap="switchMode">验证码登录</text>
+  </view>
+
+  <view wx:if="{{loginMode === 'oneClick'}}" class="actions">
+    <button wx:if="{{agreed}}" class="primary" open-type="getPhoneNumber" bind:getphonenumber="onGetPhoneNumber" loading="{{submitting}}" disabled="{{submitting}}">手机号一键登录</button>
+    <button wx:else class="primary primary-off" bindtap="remindAgree">手机号一键登录</button>
+    <view class="hint">新用户验证手机号后将自动注册</view>
+  </view>
+
+  <view wx:else class="actions">
+    <view class="sms-form">
+      <input class="sms-input" type="number" maxlength="11" placeholder="请输入手机号" value="{{smsPhone}}" bindinput="onSmsPhoneInput" />
+      <view class="sms-code-row">
+        <input class="sms-input code" type="number" maxlength="6" placeholder="6 位验证码" value="{{smsCode}}" bindinput="onSmsCodeInput" />
+        <button class="sms-send" disabled="{{smsSending || countdown > 0}}" bindtap="onSendSmsCode">
+          {{countdown > 0 ? countdown + 's 后重发' : (smsSending ? '发送中…' : '获取验证码')}}
+        </button>
+      </view>
+    </view>
+    <button class="primary" loading="{{submitting}}" disabled="{{submitting}}" bindtap="onSmsLogin">登录 / 注册</button>
+    <view class="hint">测试短信服务：验证码会直接回显并自动填入</view>
+  </view>
+
+  <view class="agreement {{shake ? 'shake' : ''}}">
+    <view class="checkbox {{agreed ? 'checked' : ''}}" bindtap="toggleAgreement">{{agreed ? '✓' : ''}}</view>
+    <view class="agreement-text">
+      <text bindtap="toggleAgreement">我已阅读并同意</text>
+      <text class="link" catchtap="showAgreement" data-type="user">《用户协议》</text>
+      <text>和</text>
+      <text class="link" catchtap="showAgreement" data-type="privacy">《隐私政策》</text>
+    </view>
+  </view>
+
+  <view class="browse" bindtap="browse">先看看，随便逛逛 ›</view>
+</view>

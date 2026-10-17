@@ -1,0 +1,32 @@
+<view class="page">
+  <scroll-view scroll-x class="tabs" enhanced show-scrollbar="{{false}}">
+    <view wx:for="{{tabs}}" wx:key="status" class="tab {{active === index ? 'active' : ''}}" data-index="{{index}}" bindtap="switchTab">{{item.label}}</view>
+  </scroll-view>
+
+  <view wx:if="{{!orders.length && !loading}}" class="empty">
+    <view class="empty-icon">📦</view>
+    <text class="muted">暂无相关订单</text>
+  </view>
+
+  <view wx:for="{{orders}}" wx:key="id" class="card order" data-id="{{item.id}}" bindtap="openDetail">
+    <view class="order-head">
+      <text class="order-no">{{item.orderNo}}</text>
+      <text class="status status-{{item.status}}">{{item.statusLabel}}</text>
+    </view>
+    <view class="order-body">
+      <text class="muted">{{item.createdText}}</text>
+      <text class="muted">收货人：{{item.receiverName}}</text>
+    </view>
+    <view class="order-foot">
+      <view class="amount">应付 <text class="amount-value">¥ {{item.payableAmount}}</text></view>
+      <view class="ops">
+        <button wx:if="{{item.status === 'PENDING_PAYMENT'}}" class="btn ghost" size="mini" catchtap="cancelOrder" data-id="{{item.id}}">取消订单</button>
+        <button wx:if="{{item.status === 'PENDING_PAYMENT'}}" class="btn primary" size="mini" catchtap="pay" data-no="{{item.orderNo}}">去付款</button>
+        <text wx:else class="muted">详情 ›</text>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{loading}}" class="muted center">加载中…</view>
+  <view wx:elif="{{orders.length && orders.length >= total}}" class="muted center">— 到底了 —</view>
+</view>

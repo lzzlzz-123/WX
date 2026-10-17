@@ -1,0 +1,4 @@
+{
+  "desc": "筑云清松小程序页面索引",
+  "rules": [{ "action": "allow", "page": "*" }]
+}

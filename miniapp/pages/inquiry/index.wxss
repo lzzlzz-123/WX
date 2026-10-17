@@ -1,0 +1,27 @@
+.tabs{display:flex;gap:24rpx;margin-bottom:18rpx}
+.tab{flex:1;text-align:center;padding:18rpx 0;font-size:26rpx;color:#5b7482;background:#fff;border-radius:14rpx}
+.tab.active{background:#1d4056;color:#fff;font-weight:700}
+.empty{display:flex;flex-direction:column;align-items:center;gap:18rpx;padding:100rpx 0}
+.empty-icon{font-size:70rpx}
+.record{display:flex;flex-direction:column;gap:10rpx}
+.record-head{display:flex;justify-content:space-between;align-items:center}
+.record-name{font-size:28rpx;font-weight:700;color:#28495b}
+.status{font-size:22rpx;font-weight:700;color:#e67e22}
+.status-QUOTED{color:#27ae60}
+.status-CLOSED{color:#91a0aa}
+.quote-box{background:#f4f9fd;border-radius:14rpx;padding:18rpx;display:flex;flex-direction:column;gap:8rpx}
+.quote-line{display:flex;justify-content:space-between;align-items:center}
+.quote-label{font-size:24rpx;color:#2875a8}
+.quote-price{font-size:32rpx;font-weight:700;color:#d35400}
+.record-foot{display:flex;justify-content:space-between;border-top:1px solid #edf1f3;padding-top:12rpx;margin-top:4rpx}
+.btn.primary{margin:0;background:#2e8ecd;color:#fff;font-size:25rpx;border-radius:32rpx;padding:0 40rpx;height:64rpx;line-height:64rpx}
+.center{display:block;text-align:center;padding:24rpx 0}
+.form-title{display:block;font-size:29rpx;font-weight:700;color:#28495b;margin-bottom:18rpx}
+.field{min-height:82rpx;border-bottom:1px solid #edf1f3;display:flex;align-items:center;gap:12rpx}
+.field>text:first-child{width:145rpx;color:#5b7482;font-size:23rpx;flex-shrink:0}
+.field input{flex:1;font-size:22rpx}
+.picker{font-size:22rpx;color:#2875a8;padding:0 10rpx}
+.area{align-items:flex-start;padding:14rpx 0}
+.area textarea{flex:1;height:100rpx;font-size:22rpx}
+.submit{margin-top:28rpx;background:#2e8ecd;color:#fff;border-radius:16rpx;height:82rpx;line-height:82rpx;font-size:27rpx}
+.hint{display:block;text-align:center;color:#a1adb4;font-size:18rpx;margin-top:13rpx}

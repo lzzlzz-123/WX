@@ -1,0 +1,31 @@
+.page{min-height:100vh;background:linear-gradient(180deg,#1d4056 0%,#1d4056 420rpx,#f5f7f9 420rpx);padding:0 40rpx;display:flex;flex-direction:column}
+.hero{padding:110rpx 0 50rpx;display:flex;flex-direction:column;align-items:center}
+.logo{width:130rpx;height:130rpx;border-radius:32rpx;background:#42a1df;color:#fff;font-size:64rpx;font-weight:700;display:flex;align-items:center;justify-content:center}
+.brand{color:#fff;font-size:40rpx;font-weight:700;letter-spacing:6rpx;margin-top:26rpx}
+.slogan{color:#a9c1ce;font-size:24rpx;letter-spacing:2rpx;margin-top:12rpx}
+.tip-card{background:#fff;border-radius:22rpx;padding:44rpx 36rpx;position:relative}
+.tip-quote{position:absolute;top:6rpx;left:24rpx;font-size:90rpx;color:#d9ebf7;font-weight:700;line-height:1}
+.tip-title{font-size:34rpx;font-weight:700;color:#213e51;text-align:center;margin-top:16rpx}
+.tip-sub{font-size:25rpx;color:#81959f;text-align:center;margin-top:18rpx;line-height:1.6}
+.actions{margin-top:40rpx}
+.mode-tabs{display:flex;justify-content:center;gap:60rpx;margin-top:60rpx}
+.mode-tabs text{font-size:26rpx;color:#81959f;padding-bottom:8rpx}
+.mode-tabs text.active{color:#267fc6;font-weight:700;border-bottom:4rpx solid #267fc6}
+.sms-form{background:#fff;border-radius:22rpx;padding:30rpx 28rpx;margin-bottom:28rpx;display:flex;flex-direction:column;gap:24rpx}
+.sms-input{height:88rpx;background:#f4f7f9;border-radius:14rpx;padding:0 26rpx;font-size:28rpx;color:#213e51}
+.sms-code-row{display:flex;gap:20rpx;align-items:center}
+.sms-input.code{flex:1}
+.sms-send{width:220rpx;height:88rpx;line-height:88rpx;padding:0;background:#e8f2fb;color:#267fc6;font-size:24rpx;border-radius:14rpx;flex-shrink:0}
+.sms-send[disabled]{opacity:.55}
+.primary{background:#267fc6;color:#fff;border-radius:46rpx;font-size:32rpx;font-weight:700}
+.primary-off{opacity:.55}
+.primary[disabled]{opacity:.6}
+.hint{text-align:center;font-size:22rpx;color:#97a5ad;margin-top:20rpx}
+.agreement{display:flex;align-items:flex-start;margin-top:44rpx;padding:0 10rpx}
+.checkbox{width:34rpx;height:34rpx;border-radius:50%;border:2rpx solid #b4c4cf;margin-right:14rpx;margin-top:4rpx;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:22rpx;color:#fff;background:#fff}
+.checkbox.checked{background:#267fc6;border-color:#267fc6}
+.agreement-text{font-size:23rpx;color:#81959f;line-height:1.5}
+.link{color:#267fc6}
+.browse{text-align:center;font-size:26rpx;color:#81959f;margin-top:70rpx;padding:20rpx}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-10rpx)}40%{transform:translateX(10rpx)}60%{transform:translateX(-8rpx)}80%{transform:translateX(8rpx)}}
+.shake{animation:shake .5s}

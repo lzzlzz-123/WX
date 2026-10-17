@@ -1,0 +1,52 @@
+<view class="page">
+  <block wx:if="{{!editing}}">
+    <view wx:if="{{!invoices.length && !loading}}" class="empty">
+      <view class="empty-icon">🧾</view>
+      <text class="muted">还没有发票抬头，先添加一条吧</text>
+    </view>
+
+    <view wx:for="{{invoices}}" wx:key="id" class="card inv">
+      <view class="inv-head">
+        <text class="inv-title">{{item.title}}</text>
+        <text class="type-tag type-{{item.titleType}}">{{item.titleType === 'COMPANY' ? '企业' : '个人'}}</text>
+        <text wx:if="{{item.isDefault === 1}}" class="tag">默认</text>
+      </view>
+      <view class="muted" wx:if="{{item.taxNo}}">税号：{{item.taxNo}}</view>
+      <view class="muted" wx:if="{{item.email}}">接收邮箱：{{item.email}}</view>
+      <view class="muted" wx:if="{{item.bankName}}">开户行：{{item.bankName}} {{item.bankAccount}}</view>
+      <view class="inv-ops">
+        <text wx:if="{{item.isDefault !== 1}}" class="op" data-item="{{item}}" bindtap="setDefault">设为默认</text>
+        <text class="op" data-item="{{item}}" bindtap="editInvoice">编辑</text>
+        <text class="op danger" data-id="{{item.id}}" bindtap="deleteInvoice">删除</text>
+      </view>
+    </view>
+
+    <button class="submit" bindtap="addInvoice">＋ 新增发票抬头</button>
+  </block>
+
+  <block wx:else>
+    <view class="card">
+      <view class="form-title">{{form.id ? '编辑抬头' : '新增抬头'}}</view>
+      <view class="type-row">
+        <view class="type-option {{form.titleType === 'COMPANY' ? 'active' : ''}}" data-type="COMPANY" bindtap="onTypeChange">企业</view>
+        <view class="type-option {{form.titleType === 'PERSONAL' ? 'active' : ''}}" data-type="PERSONAL" bindtap="onTypeChange">个人</view>
+      </view>
+      <view class="field">
+        <text>{{form.titleType === 'COMPANY' ? '企业名称' : '个人姓名'}}</text>
+        <input placeholder="{{form.titleType === 'COMPANY' ? '与营业执照一致' : '姓名'}}" value="{{form.title}}" data-field="title" bindinput="onInput" />
+      </view>
+      <view class="field" wx:if="{{form.titleType === 'COMPANY'}}"><text>企业税号</text><input placeholder="统一社会信用代码" value="{{form.taxNo}}" data-field="taxNo" bindinput="onInput" /></view>
+      <view class="field" wx:if="{{form.titleType === 'COMPANY'}}"><text>开户银行</text><input placeholder="选填" value="{{form.bankName}}" data-field="bankName" bindinput="onInput" /></view>
+      <view class="field" wx:if="{{form.titleType === 'COMPANY'}}"><text>银行账号</text><input placeholder="选填" value="{{form.bankAccount}}" data-field="bankAccount" bindinput="onInput" /></view>
+      <view class="field" wx:if="{{form.titleType === 'COMPANY'}}"><text>注册地址</text><input placeholder="选填" value="{{form.registerAddress}}" data-field="registerAddress" bindinput="onInput" /></view>
+      <view class="field" wx:if="{{form.titleType === 'COMPANY'}}"><text>注册电话</text><input placeholder="选填" value="{{form.registerPhone}}" data-field="registerPhone" bindinput="onInput" /></view>
+      <view class="field"><text>接收邮箱</text><input placeholder="电子发票接收邮箱（选填）" value="{{form.email}}" data-field="email" bindinput="onInput" /></view>
+      <view class="field switch-field">
+        <text>设为默认抬头</text>
+        <switch checked="{{form.isDefault === 1}}" color="#2e8ecd" bindchange="onDefaultSwitch" />
+      </view>
+    </view>
+    <button class="submit" loading="{{saving}}" disabled="{{saving}}" bindtap="saveInvoice">保存抬头</button>
+    <button class="cancel" bindtap="cancelEdit">取消</button>
+  </block>
+</view>

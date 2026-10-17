@@ -1,0 +1,58 @@
+<view class="page">
+  <view class="tabs">
+    <view class="tab {{tab === 'records' ? 'active' : ''}}" data-tab="records" bindtap="switchTab">询价记录</view>
+    <view class="tab {{tab === 'create' ? 'active' : ''}}" data-tab="create" bindtap="switchTab">提交询价</view>
+  </view>
+
+  <!-- 询价记录 -->
+  <block wx:if="{{tab === 'records'}}">
+    <view wx:if="{{!records.length && !loading}}" class="empty">
+      <view class="empty-icon">📋</view>
+      <text class="muted">还没有询价记录，去提交一条吧</text>
+      <button class="btn primary" bindtap="switchTab" data-tab="create">立即询价</button>
+    </view>
+
+    <view wx:for="{{records}}" wx:key="id" class="card record">
+      <view class="record-head">
+        <text class="record-name">{{item.productName}}</text>
+        <text class="status status-{{item.status}}">{{item.statusLabel}}</text>
+      </view>
+      <view class="muted" wx:if="{{item.specification}}">规格：{{item.specification}}</view>
+      <view class="muted">采购量：{{item.quantityText}}<text wx:if="{{item.expectedPrice}}">　期望价：¥ {{item.expectedPrice}}</text></view>
+      <view wx:if="{{item.quotePrice !== null}}" class="quote-box">
+        <view class="quote-line">
+          <text class="quote-label">采购顾问报价</text>
+          <text class="quote-price">¥ {{item.quotePrice}}</text>
+        </view>
+        <view class="muted" wx:if="{{item.quoteDeliveryFee !== null}}">配送费：¥ {{item.quoteDeliveryFee}}<text wx:if="{{item.quoteValidUntil}}">　有效期至 {{item.quoteValidUntil}}</text></view>
+        <view class="muted" wx:if="{{item.quoteRemark}}">{{item.quoteRemark}}</view>
+      </view>
+      <view class="record-foot">
+        <text class="muted">{{item.inquiryNo}}</text>
+        <text class="muted">{{item.createdText}}</text>
+      </view>
+    </view>
+
+    <view wx:if="{{loading}}" class="muted center">加载中…</view>
+    <view wx:elif="{{records.length && records.length >= total}}" class="muted center">— 到底了 —</view>
+  </block>
+
+  <!-- 提交询价 -->
+  <block wx:else>
+    <view class="card">
+      <view class="form-title">告诉我们您的采购需求</view>
+      <view class="field"><text>商品名称</text><input placeholder="例如：HRB400E 螺纹钢" value="{{form.productName}}" data-field="productName" bindinput="onInput" /></view>
+      <view class="field"><text>规格型号</text><input placeholder="选填，例如：12mm 国标" value="{{form.specification}}" data-field="specification" bindinput="onInput" /></view>
+      <view class="field">
+        <text>采购数量</text>
+        <input type="digit" placeholder="请输入数量" value="{{form.quantity}}" data-field="quantity" bindinput="onInput" />
+        <picker range="{{units}}" value="{{unitIndex}}" bindchange="onUnit"><view class="picker">{{units[unitIndex]}} ▾</view></picker>
+      </view>
+      <view class="field"><text>期望单价</text><input type="digit" placeholder="选填，元" value="{{form.expectedPrice}}" data-field="expectedPrice" bindinput="onInput" /></view>
+      <view class="field area"><text>交货地址</text><textarea placeholder="项目所在地和详细地址" value="{{form.deliveryAddress}}" data-field="deliveryAddress" bindinput="onInput"></textarea></view>
+      <view class="field area"><text>补充说明</text><textarea placeholder="品牌、规格、交期等特殊要求" value="{{form.remark}}" data-field="remark" bindinput="onInput"></textarea></view>
+    </view>
+    <button class="submit" loading="{{submitting}}" disabled="{{submitting}}" bindtap="submit">提交询价单</button>
+    <text class="hint">采购顾问收到后将尽快为你报价</text>
+  </block>
+</view>

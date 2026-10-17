@@ -1,0 +1,44 @@
+<view class="page">
+  <block wx:if="{{!editing}}">
+    <view wx:if="{{!addresses.length && !loading}}" class="empty">
+      <view class="empty-icon">📍</view>
+      <text class="muted">还没有收货地址，先添加一条吧</text>
+    </view>
+
+    <view wx:for="{{addresses}}" wx:key="id" class="card addr">
+      <view class="addr-head">
+        <view class="addr-title">
+          <text class="addr-name">{{item.receiverName}}</text>
+          <text class="addr-phone">{{item.receiverPhone}}</text>
+          <text wx:if="{{item.isDefault === 1}}" class="tag">默认</text>
+        </view>
+      </view>
+      <view class="addr-text">{{item.province}}{{item.city}}{{item.district}} {{item.detailAddress}}</view>
+      <view class="addr-ops">
+        <text wx:if="{{item.isDefault !== 1}}" class="op" data-item="{{item}}" bindtap="setDefault">设为默认</text>
+        <text class="op" data-item="{{item}}" bindtap="editAddress">编辑</text>
+        <text class="op danger" data-id="{{item.id}}" bindtap="deleteAddress">删除</text>
+      </view>
+    </view>
+
+    <button class="submit" bindtap="addAddress">＋ 新增收货地址</button>
+  </block>
+
+  <block wx:else>
+    <view class="card">
+      <view class="form-title">{{form.id ? '编辑地址' : '新增地址'}}</view>
+      <view class="field"><text>收货人</text><input placeholder="姓名" value="{{form.receiverName}}" data-field="receiverName" bindinput="onInput" /></view>
+      <view class="field"><text>手机号</text><input type="number" maxlength="11" placeholder="11 位手机号" value="{{form.receiverPhone}}" data-field="receiverPhone" bindinput="onInput" /></view>
+      <view class="field"><text>省份</text><input placeholder="例如：江苏省" value="{{form.province}}" data-field="province" bindinput="onInput" /></view>
+      <view class="field"><text>城市</text><input placeholder="例如：苏州市" value="{{form.city}}" data-field="city" bindinput="onInput" /></view>
+      <view class="field"><text>区县</text><input placeholder="例如：昆山市" value="{{form.district}}" data-field="district" bindinput="onInput" /></view>
+      <view class="field area"><text>详细地址</text><textarea placeholder="工地/仓库名称、门牌号等" value="{{form.detailAddress}}" data-field="detailAddress" bindinput="onInput"></textarea></view>
+      <view class="field switch-field">
+        <text>设为默认地址</text>
+        <switch checked="{{form.isDefault === 1}}" color="#2e8ecd" bindchange="onDefaultSwitch" />
+      </view>
+    </view>
+    <button class="submit" loading="{{saving}}" disabled="{{saving}}" bindtap="saveAddress">保存地址</button>
+    <button class="cancel" bindtap="cancelEdit">取消</button>
+  </block>
+</view>

@@ -1,0 +1,22 @@
+.banner{border-radius:18rpx;padding:36rpx 28rpx;margin-bottom:18rpx;background:#1d4056;color:#fff}
+.banner-status{font-size:36rpx;font-weight:700}
+.banner-sub{font-size:23rpx;color:#b9cbd6;margin-top:10rpx}
+.status-bg-COMPLETED{background:#27ae60}
+.status-bg-CANCELLED{background:#91a0aa}
+.status-bg-SHIPPED,.status-bg-DELIVERING{background:#2e8ecd}
+.receiver-line{display:flex;justify-content:space-between;font-size:28rpx;font-weight:700;color:#28495b;margin-bottom:10rpx}
+.receiver .muted{display:block;margin-top:6rpx}
+.card-title{font-size:27rpx;font-weight:700;color:#28495b;margin-bottom:16rpx}
+.goods-row{display:flex;justify-content:space-between;gap:20rpx;padding:14rpx 0;border-bottom:1px solid #edf1f3}
+.goods-info{display:flex;flex-direction:column;gap:6rpx;flex:1}
+.goods-name{font-size:25rpx;color:#213b4d}
+.goods-amount{display:flex;flex-direction:column;align-items:flex-end;gap:6rpx;font-size:23rpx;color:#5b7482}
+.goods-sum{font-weight:700;color:#213b4d}
+.amount-row{display:flex;justify-content:space-between;padding:12rpx 0;font-size:24rpx;color:#405d6b}
+.amount-row.total{border-top:1px solid #edf1f3;margin-top:8rpx;padding-top:18rpx;font-weight:700}
+.total-value{font-size:32rpx;color:#d35400}
+.info-row{display:flex;justify-content:space-between;padding:10rpx 0;font-size:24rpx;color:#405d6b}
+.footer{position:fixed;left:0;right:0;bottom:0;background:#fff;display:flex;justify-content:flex-end;gap:20rpx;padding:20rpx 30rpx;padding-bottom:calc(20rpx + env(safe-area-inset-bottom));box-shadow:0 -2rpx 12rpx rgba(0,0,0,.06)}
+.btn{margin:0;font-size:26rpx;border-radius:36rpx;padding:0 40rpx;height:70rpx;line-height:70rpx}
+.btn.ghost{background:#f4f7f9;color:#5b7482}
+.btn.primary{background:#2e8ecd;color:#fff}

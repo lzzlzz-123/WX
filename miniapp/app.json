@@ -1,0 +1,37 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/goods/list",
+    "pages/cart/index",
+    "pages/order/index",
+    "pages/order/list",
+    "pages/order/detail",
+    "pages/inquiry/index",
+    "pages/address/index",
+    "pages/invoice/index",
+    "pages/mine/index",
+    "pages/login/index",
+    "pages/profile/index"
+  ],
+  "window": {
+    "navigationBarTitleText": "筑云清松",
+    "navigationBarBackgroundColor": "#ffffff",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#f5f7f9",
+    "backgroundTextStyle": "light"
+  },
+  "tabBar": {
+    "color": "#91a0ad",
+    "selectedColor": "#267fc6",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "white",
+    "list": [
+      { "pagePath": "pages/index/index", "text": "首页" },
+      { "pagePath": "pages/goods/list", "text": "找材料" },
+      { "pagePath": "pages/cart/index", "text": "采购车" },
+      { "pagePath": "pages/mine/index", "text": "我的" }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}
